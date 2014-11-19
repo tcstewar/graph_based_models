@@ -1,0 +1,47 @@
+body {
+  overflow-y:scroll;
+  font-family: arial;
+}
+
+text {
+  font: 12px sans-serif;
+}
+
+@font-face {
+  font-family: "Quicksand";
+  src: url(/static/font/quicksand/Quicksand-Regular.otf);
+}
+
+body, button, input {
+  font-family: "Quicksand";
+}
+
+#logo {
+}
+
+#logo>img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;  /* this too, probably */
+  display: block; /*required for margin-centering to take effect */
+  
+  
+  margin-top: 70px;
+}
+
+
+#sliders {right: 0; text-align: right;}
+#sliders .slider_label {
+    display: inline-block;
+    width: 250px;
+    vertical-align: top;
+    padding-top: 8px;
+}
+#sliders .slider {
+    display: inline-block;
+    width: calc(100% - 300px);
+}
+
+#sliders .slider_label .s_value {
+    font-weight: bold;
+}

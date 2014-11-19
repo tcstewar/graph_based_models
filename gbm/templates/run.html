@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>%(model_name)s - Graph Based Model</title>
+    <meta charset="utf-8">
+    
+    <script src="/static/js/d3.v3.js", type="text/javascript"></script>
+    <script src="/static/js/d3.tip.js", type="text/javascript"></script>
+    <script src="/static/js/nv.d3.js", type="text/javascript"></script>
+    <script src="/static/js/nvd3/tooltip.js"></script>
+    <script src="/static/js/nvd3/utils.js"></script>
+    <script src="/static/js/nvd3/interactiveLayer.js"></script>
+    <script src="/static/js/nvd3/models/legend.js"></script>
+    <script src="/static/js/nvd3/models/axis.js"></script>
+    <script src="/static/js/nvd3/models/scatter.js"></script>
+    <script src="/static/js/nvd3/models/line.js"></script>
+    <script src="/static/js/nvd3/models/lineChart.js"></script>
+    <script src="/static/js/d3.slider/d3.slider.js"></script>
+    <link href="/static/css/nv.d3.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/d3.slider.css" rel="stylesheet" type="text/css">
+    
+</head>
+
+<body>
+
+<script>
+function update_slide(key, value, decimals) {
+    d3.select('#s_val_' + key).text(value.toFixed(decimals))
+}
+</script>
+
+    <div id='sliders'>
+    %(sliders)s
+    </div>
+    
+    <div class='chart full' id='graph'>
+        <svg></svg>
+    </div>
+    
+    
+    <div id='logo'>
+      <img src="/static/img/hi-logos.png" />
+    </div>
+      
+<script>
+var chart_main;
+nv.addGraph(function() {
+    chart_main = nv.models.lineChart()
+                    .useInteractiveGuideline(true)
+                    .forceY([0, 100])
+     .options({
+    margin: {left: 100, bottom: 40},
+    showXAxis: true,
+    showYAxis: true,
+    transitionDuration: 250
+  })
+                    
+    chart_main.xAxis     //Chart x-axis settings
+      .axisLabel('%(xlabel)s')
+      .tickFormat(d3.format(',.2f'));                    
+    chart_main.yAxis    
+      .axisLabel('%(ylabel)s')
+      .tickFormat(d3.format(',.2f'));      
+  
+    return chart_main;
+    });
+
+
+    
+
+function doaction(action, replace) {
+    console.log(action);
+    
+    var data = new FormData();
+    data.append('action', action);
+    if (replace != undefined) {
+        data.append('replace', replace);
+    }
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/play.json', true);
+    xhr.onload = update;
+    xhr.send(data);
+}
+
+function update() {
+    data = JSON.parse(this.responseText);
+    
+    steps = data.time[0].values.length;
+    score = 100;
+    
+        
+    document.getElementById("score").innerHTML="<p>"+data.actions+"</p>";   
+
+    d3.select('#chart_time svg')
+        .datum(data.time)
+        .call(chart_time);
+    nv.utils.windowResize(chart_time.update);
+    
+    d3.select('#chart_money svg')
+        .datum(data.graph_money)
+        .call(chart_money);
+    nv.utils.windowResize(chart_money.update);
+
+    d3.select('#chart_carbon svg')
+        .datum(data.graph_carbon)
+        .call(chart_carbon);
+    nv.utils.windowResize(chart_carbon.update);
+
+    d3.select('#chart_govt_cost svg')
+        .datum(data.graph_govt_cost)
+        .call(chart_govt_cost);
+    nv.utils.windowResize(chart_govt_cost.update);
+
+    d3.select('#chart_retail_profit svg')
+        .datum(data.graph_retail_profit)
+        .call(chart_retail_profit);
+    nv.utils.windowResize(chart_retail_profit.update);
+    
+    update_grid(data.grid);    
+    
+    update_controls(data.control_text, data.control_code);
+}
+
+
+
+
+//doaction('reload');
+
+
+</script>      
+      
+</body>
+</html>
