@@ -45,3 +45,7 @@ body, button, input {
 #sliders .slider_label .s_value {
     font-weight: bold;
 }
+
+#chart_main {
+    height: 350px;
+    }

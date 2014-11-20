@@ -54,9 +54,25 @@ class Server(swi.SimpleWebInterface):
         html = pkgutil.get_data(pkg, 'templates/run.html')
 
         sliders = model.html_sliders()
+        slider_keys = model.params.keys()
 
         return html % dict(sliders=sliders, model_name=model.name,
-                           xlabel=model.xlabel, ylabel=model.ylabel)
+                           xlabel=model.xlabel, ylabel=model.ylabel,
+                           slider_keys=slider_keys)
+
+    def swi_run_json(self, model, **params):
+        p = {}
+        for k, v in params.items():
+            if k.startswith('key_'):
+                p[k[4:]] = float(v)
+
+        model = getattr(gbm.models, model)()
+
+        r = model.run(**p)
+        data = model.plot_nvd3(r)
+
+        return json.dumps(dict(main=data))
+
 
 
 

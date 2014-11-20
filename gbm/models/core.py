@@ -37,17 +37,28 @@ class GraphBasedModel(object):
         p = ParamSet(self.params, params)
         r = self.generate_data(p)
 
+        return r
+
+    def plot_pylab(self, r):
         import pylab
         for line in r:
             pylab.plot(line.x, line.y, color=line.color, label=line.label)
         pylab.show()
 
+    def plot_nvd3(self, r):
+        data = []
+        for line in r:
+            values = [dict(x=line.x[i], y=line.y[i])
+                      for i in range(len(line.x))]
+            data.append(dict(values=values, color=line.color, key=line.label,
+                        area=False))
+        return data
+
     def html_sliders(self):
         sliders = []
         for k, p in self.params.items():
             html = '''<div class="slider_label">%(desc)s:
-                           <span id="s_val_%(k)s" class="s_value">
-                           %(default)g</span>
+                      <span id="s_val_%(k)s" class="s_value">%(default)g</span>
                       </div>
                       <div id="s_%(k)s" class="slider"></div>
                       <script>d3.select("#s_%(k)s").call(d3.slider()

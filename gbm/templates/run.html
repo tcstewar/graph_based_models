@@ -27,14 +27,61 @@
 <script>
 function update_slide(key, value, decimals) {
     d3.select('#s_val_' + key).text(value.toFixed(decimals))
+    update_graph();
 }
+
+var waiting = false;
+var queued = false;
+
+var slider_keys = %(slider_keys)s;
+
+function update_graph() {
+    if (waiting) {
+        queued = true;
+        return;
+    } else {
+        waiting = true;
+        
+        var data = new FormData();
+        data.append('model', '%(model_name)s');
+        for (i in slider_keys) {
+            key = slider_keys[i];
+            data.append('key_' + key, d3.select('#s_val_' + key).text())
+        }
+    
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/run.json', true);
+        xhr.onload = update_result;
+        xhr.send(data);
+    }
+}
+
+function update_result() {
+    waiting = false;
+    if (queued) {
+        queued = false;
+        update_graph();
+    }
+    
+    //console.log(this.responseText);
+    
+    data = JSON.parse(this.responseText);
+    
+    //console.log(data);
+    
+    d3.select('#chart_main svg')
+        .datum(data.main)
+        .call(chart_main);
+    nv.utils.windowResize(chart_main.update);    
+}
+
 </script>
 
     <div id='sliders'>
     %(sliders)s
     </div>
     
-    <div class='chart full' id='graph'>
+    <div class='chart full' id='chart_main'>
         <svg></svg>
     </div>
     
@@ -48,7 +95,6 @@ var chart_main;
 nv.addGraph(function() {
     chart_main = nv.models.lineChart()
                     .useInteractiveGuideline(true)
-                    .forceY([0, 100])
      .options({
     margin: {left: 100, bottom: 40},
     showXAxis: true,
@@ -124,9 +170,7 @@ function update() {
 }
 
 
-
-
-//doaction('reload');
+update_graph();
 
 
 </script>      
