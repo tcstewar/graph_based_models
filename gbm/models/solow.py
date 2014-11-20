@@ -23,11 +23,17 @@ class Solow(GraphBasedModel):
         investment = p.s * output
         break_even = (p.d + p.n) * k
 
+        equal = ((p.d + p.n) / (p.s * p.A)) ** (1.0 / (p.alpha - 1))
+
         results = [
             Line(k, output, color='green', label='output per worker'),
             Line(k, investment, color='red', label='investment per worker'),
             Line(k, break_even, color='blue', label='break-even investment'),
             ]
+
+        if equal <= p.k_max:
+            results.append(Line([equal, equal], [0, (p.d + p.n) * equal],
+                           color='black', label='equilibrium'))
         return results
 
 
