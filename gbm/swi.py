@@ -78,7 +78,6 @@ def makeDBFromMultipart(data):
     db[name]=val
 
     i=j
-  print db
   return db
 
 
