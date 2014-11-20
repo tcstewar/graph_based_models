@@ -55,22 +55,23 @@ class GraphBasedModel(object):
                         area=False))
         return data
 
-    def html_sliders(self):
+    def html_sliders(self, tag=''):
         sliders = []
         for k, p in self.params.items():
             html = '''<div class="slider_label">%(desc)s:
-                      <span id="s_val_%(k)s" class="s_value">%(default)g</span>
+                      <span id="s_val%(tag)s_%(k)s" class="s_value">%(default)g</span>
                       </div>
-                      <div id="s_%(k)s" class="slider"></div>
-                      <script>d3.select("#s_%(k)s").call(d3.slider()
+                      <div id="s%(tag)s_%(k)s" class="slider"></div>
+                      <script>d3.select("#s%(tag)s_%(k)s").call(d3.slider()
                           .axis(true).value(%(default)g)
                           .on("slide", function(evt,value) {
-                              update_slide('%(k)s', value, %(decimals)d);})
+                              update_slide%(tag)s('%(k)s', value, %(decimals)d);})
                           .min(%(min)g)
                           .max(%(max)g));
                       </script>
                       ''' % dict(desc=p.desc, k=k, default=p.default,
-                                 min=p.min, max=p.max, decimals=p.decimals)
+                                 min=p.min, max=p.max, decimals=p.decimals,
+                                 tag=tag)
             sliders.append(html)
 
         return ''.join(sliders)
