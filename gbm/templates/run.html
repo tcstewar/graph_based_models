@@ -113,62 +113,6 @@ nv.addGraph(function() {
     });
 
 
-    
-
-function doaction(action, replace) {
-    console.log(action);
-    
-    var data = new FormData();
-    data.append('action', action);
-    if (replace != undefined) {
-        data.append('replace', replace);
-    }
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/play.json', true);
-    xhr.onload = update;
-    xhr.send(data);
-}
-
-function update() {
-    data = JSON.parse(this.responseText);
-    
-    steps = data.time[0].values.length;
-    score = 100;
-    
-        
-    document.getElementById("score").innerHTML="<p>"+data.actions+"</p>";   
-
-    d3.select('#chart_time svg')
-        .datum(data.time)
-        .call(chart_time);
-    nv.utils.windowResize(chart_time.update);
-    
-    d3.select('#chart_money svg')
-        .datum(data.graph_money)
-        .call(chart_money);
-    nv.utils.windowResize(chart_money.update);
-
-    d3.select('#chart_carbon svg')
-        .datum(data.graph_carbon)
-        .call(chart_carbon);
-    nv.utils.windowResize(chart_carbon.update);
-
-    d3.select('#chart_govt_cost svg')
-        .datum(data.graph_govt_cost)
-        .call(chart_govt_cost);
-    nv.utils.windowResize(chart_govt_cost.update);
-
-    d3.select('#chart_retail_profit svg')
-        .datum(data.graph_retail_profit)
-        .call(chart_retail_profit);
-    nv.utils.windowResize(chart_retail_profit.update);
-    
-    update_grid(data.grid);    
-    
-    update_controls(data.control_text, data.control_code);
-}
-
 
 update_graph();
 
