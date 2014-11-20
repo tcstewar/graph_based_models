@@ -74,5 +74,3 @@ class Server(swi.SimpleWebInterface):
         return json.dumps(dict(main=data))
 
 
-
-

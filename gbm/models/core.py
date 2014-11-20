@@ -43,6 +43,7 @@ class GraphBasedModel(object):
         import pylab
         for line in r:
             pylab.plot(line.x, line.y, color=line.color, label=line.label)
+        pylab.legend(loc='best')
         pylab.show()
 
     def plot_nvd3(self, r):

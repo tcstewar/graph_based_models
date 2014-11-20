@@ -39,4 +39,5 @@ class Solow(GraphBasedModel):
 
 if __name__ == '__main__':
     m = Solow()
-    m.run()
+    r = m.run()
+    m.ploy_pylab(r)
