@@ -49,15 +49,16 @@ class Server(swi.SimpleWebInterface):
         return html % dict(model_list=model_list)
 
     def swi_run(self, model):
-        model = getattr(gbm.models, model)()
+        m = getattr(gbm.models, model)()
 
         html = pkgutil.get_data(pkg, 'templates/run.html')
 
-        sliders = model.html_sliders()
-        slider_keys = model.params.keys()
+        sliders = m.html_sliders()
+        slider_keys = m.params.keys()
 
-        return html % dict(sliders=sliders, model_name=model.name,
-                           xlabel=model.xlabel, ylabel=model.ylabel,
+        return html % dict(sliders=sliders, model_name=m.name,
+                           model_class=model,
+                           xlabel=m.xlabel, ylabel=m.ylabel,
                            slider_keys=slider_keys)
 
     def swi_run_json(self, model, **params):

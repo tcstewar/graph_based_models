@@ -1,1 +1,1 @@
-from .solow import Solow
+from .solow import Solowfrom .demand import DemandCurve

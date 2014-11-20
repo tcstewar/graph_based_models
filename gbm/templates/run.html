@@ -43,7 +43,7 @@ function update_graph() {
         waiting = true;
         
         var data = new FormData();
-        data.append('model', '%(model_name)s');
+        data.append('model', '%(model_class)s');
         for (i in slider_keys) {
             key = slider_keys[i];
             data.append('key_' + key, d3.select('#s_val_' + key).text())
