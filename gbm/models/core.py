@@ -42,7 +42,8 @@ class GraphBasedModel(object):
     def plot_pylab(self, r):
         import pylab
         for line in r:
-            pylab.plot(line.x, line.y, color=line.color, label=line.label)
+            pylab.plot(line.x, line.y, color=line.color, label=line.label,
+                       linewidth=3)
         pylab.legend(loc='best')
         pylab.show()
 

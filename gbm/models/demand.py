@@ -5,27 +5,31 @@ from gbm.models.core import Parameter, Line, GraphBasedModel
 class DemandCurve(GraphBasedModel):
     def __init__(self):
         super(DemandCurve, self).__init__(name='Demand Curve',
-                                    xlabel='price ($)',
-                                    ylabel='amount produced')
+                                    ylabel='price ($)',
+                                    xlabel='amount produced')
         self.add(Parameter('p_max', 50, min=0, max=100,
                            desc='Maximum Price'))
-        self.add(Parameter('q_max', 50, min=0, max=100,
-                           desc='Maximum Quantity'))
-        self.add(Parameter('quantity', 20, min=0, max=100,
-                           desc='Actual Quantity'))
+        self.add(Parameter('p_min', 10, min=0, max=100,
+                           desc='Minimum Price'))
+        self.add(Parameter('slope', 0.1, min=0, max=5,
+                           desc='Price reduction'))
+        self.add(Parameter('quantity', 200, min=0, max=700,
+                           desc='Quantity'))
 
     def generate_data(self, p):
         steps = 200
-        pp = np.linspace(0, p.p_max, steps)
-        slope = - p.q_max / p.p_max
-        demand = slope * pp + p.q_max
+        qq = np.linspace(0, 700, steps)
 
-        price = (p.quantity - p.q_max ) / slope
+        price = -p.slope * qq + p.p_max
+        price = np.maximum(price, p.p_min)
+
+        target_price = -p.slope * p.quantity + p.p_max
+        target_price = np.maximum(target_price, p.p_min)
 
         results = [
-            Line(demand, pp, color='green', label='demand'),
-            Line([0, p.quantity], [price, price], color='blue', label='price'),
-            Line([p.quantity, p.quantity], [0, price], color='red', label='quantity'),
+            Line(qq, price, color='green', label='demand'),
+            Line([0, p.quantity], [target_price, target_price], color='blue', label='price'),
+            Line([p.quantity, p.quantity], [0, target_price], color='red', label='quantity'),
             ]
 
         return results
