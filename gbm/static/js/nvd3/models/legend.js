@@ -98,6 +98,12 @@ nv.models.legend = function() {
           .style('stroke', function(d,i) { return d.color || color(d, i) });
       series.select('text').text(getKey);
 
+      series.attr('class', function(d) {
+            if (d.key.substring(0,6)=='dummy_') 
+                return 'nv-series hidden'; 
+            else 
+                return 'nv-series other';})
+      
 
       //TODO: implement fixed-width and max-width options (max-width is especially useful with the align option)
 
@@ -105,11 +111,12 @@ nv.models.legend = function() {
       if (align) {
 
         var seriesWidths = [];
-        series.each(function(d,i) {
+        series.filter(function (d) {return d.key.substring(0,6)!='dummy_'})
+              .each(function(d,i) {
               var legendText = d3.select(this).select('text');
               var nodeTextLength;
               try {
-                nodeTextLength = legendText.getComputedTextLength();
+                nodeTextLength = legendText.node().getComputedTextLength();
                 // If the legendText is display:none'd (nodeTextLength == 0), simulate an error so we approximate, instead
                 if(nodeTextLength <= 0) throw Error();
               }

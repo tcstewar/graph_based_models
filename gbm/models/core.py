@@ -16,11 +16,12 @@ class ParamSet(object):
             setattr(self, k, value)
 
 class Line(object):
-    def __init__(self, x, y, color, label):
+    def __init__(self, x, y, color, label, scatter=False):
         self.x = x
         self.y = y
         self.color = color
         self.label = label
+        self.scatter = scatter
 
 class GraphBasedModel(object):
     def __init__(self, name, xlabel, ylabel):
@@ -42,7 +43,11 @@ class GraphBasedModel(object):
     def plot_pylab(self, r):
         import pylab
         for line in r:
-            pylab.plot(line.x, line.y, color=line.color, label=line.label,
+            if line.scatter:
+                pylab.scatter(line.x, line.y, color=line.color, label=line.label)
+
+            else:
+                pylab.plot(line.x, line.y, color=line.color, label=line.label,
                        linewidth=3)
         pylab.legend(loc='best')
         pylab.show()
@@ -50,8 +55,12 @@ class GraphBasedModel(object):
     def plot_nvd3(self, r):
         data = []
         for line in r:
-            values = [dict(x=line.x[i], y=line.y[i])
-                      for i in range(len(line.x))]
+            if line.scatter:
+                values = [dict(x=line.x[i], y=line.y[i], size=3, shape='circle')
+                          for i in range(len(line.x))]
+            else:
+                values = [dict(x=line.x[i], y=line.y[i])
+                          for i in range(len(line.x))]
             data.append(dict(values=values, color=line.color, key=line.label,
                         area=False))
         return data

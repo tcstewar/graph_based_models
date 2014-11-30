@@ -49,3 +49,7 @@ body, button, input {
 #chart_main {
     height: 350px;
     }
+    
+.hidden {
+    display:none;
+    }
