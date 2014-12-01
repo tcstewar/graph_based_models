@@ -1,1 +1,1 @@
-from .solow import Solowfrom .demand import DemandCurvefrom .bifur import Bifurcate
+from .solow import Solowfrom .demand import DemandCurvefrom .bifur import Bifurcatefrom .demand2 import DemandTwoSuppliers
